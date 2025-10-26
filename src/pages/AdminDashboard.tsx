@@ -29,6 +29,12 @@ export function AdminDashboard() {
   const [showLogoModal, setShowLogoModal] = useState(false);
   const [logoUrl, setLogoUrl] = useState('');
   const [generatingBio, setGeneratingBio] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    phone1: '',
+    phone2: '',
+    email: ''
+  });
 
   if (!isAdmin) {
     navigate('/admin/login');
@@ -150,6 +156,7 @@ export function AdminDashboard() {
   const handleLogoChange = async () => {
     try {
       await setDoc(doc(db, 'settings', 'site'), {
+        ...settings,
         logoUrl: logoUrl
       });
       setShowLogoModal(false);
@@ -157,6 +164,21 @@ export function AdminDashboard() {
     } catch (error) {
       console.error('Error updating logo:', error);
       alert('Failed to update logo. Check console for details.');
+    }
+  };
+
+  const handleContactChange = async () => {
+    try {
+      await setDoc(doc(db, 'settings', 'site'), {
+        ...settings,
+        phone1: contactForm.phone1,
+        phone2: contactForm.phone2,
+        email: contactForm.email
+      });
+      setShowContactModal(false);
+    } catch (error) {
+      console.error('Error updating contact info:', error);
+      alert('Failed to update contact info. Check console for details.');
     }
   };
 
@@ -238,21 +260,47 @@ export function AdminDashboard() {
       <div className="container mx-auto px-6 py-8">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-[#3d4f5c]">Site Settings</h2>
-          <button
-            onClick={() => {
-              setLogoUrl(settings.logoUrl);
-              setShowLogoModal(true);
-            }}
-            className="flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition font-semibold"
-          >
-            <Image className="w-5 h-5" />
-            Change Logo
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                setLogoUrl(settings.logoUrl);
+                setShowLogoModal(true);
+              }}
+              className="flex items-center gap-2 bg-[#3d4f5c] text-white px-6 py-3 rounded-lg hover:bg-[#2d3f4c] transition font-semibold"
+            >
+              <Image className="w-5 h-5" />
+              Change Logo
+            </button>
+            <button
+              onClick={() => {
+                setContactForm({
+                  phone1: settings.phone1 || '',
+                  phone2: settings.phone2 || '',
+                  email: settings.email || ''
+                });
+                setShowContactModal(true);
+              }}
+              className="flex items-center gap-2 bg-[#3d4f5c] text-white px-6 py-3 rounded-lg hover:bg-[#2d3f4c] transition font-semibold"
+            >
+              <Edit2 className="w-5 h-5" />
+              Edit Contact Info
+            </button>
+          </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 mb-12">
-          <h3 className="text-xl font-bold text-[#3d4f5c] mb-4">Current Logo</h3>
-          <img src={settings.logoUrl} alt="Current Logo" className="w-32 h-32 object-contain border border-gray-200 rounded-lg" />
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-[#3d4f5c] mb-4">Current Logo</h3>
+            <img src={settings.logoUrl} alt="Current Logo" className="w-32 h-32 object-contain border border-gray-200 rounded-lg" />
+          </div>
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-[#3d4f5c] mb-4">Contact Information</h3>
+            <div className="space-y-2 text-gray-700">
+              <p><span className="font-semibold">Phone 1:</span> {settings.phone1}</p>
+              <p><span className="font-semibold">Phone 2:</span> {settings.phone2}</p>
+              <p><span className="font-semibold">Email:</span> {settings.email}</p>
+            </div>
+          </div>
         </div>
 
         <div className="mb-12">
@@ -499,6 +547,60 @@ export function AdminDashboard() {
                     setShowLogoModal(false);
                     setLogoUrl('');
                   }}
+                  className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showContactModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-6 z-50">
+          <div className="bg-white rounded-xl max-w-md w-full p-8">
+            <h3 className="text-2xl font-bold text-[#3d4f5c] mb-6">Edit Contact Information</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number 1</label>
+                <input
+                  type="text"
+                  value={contactForm.phone1}
+                  onChange={(e) => setContactForm({ ...contactForm, phone1: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3d4f5c] focus:border-transparent"
+                  placeholder="+961 71 981 996"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number 2</label>
+                <input
+                  type="text"
+                  value={contactForm.phone2}
+                  onChange={(e) => setContactForm({ ...contactForm, phone2: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3d4f5c] focus:border-transparent"
+                  placeholder="+225 01 50 19 11 62"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <input
+                  type="email"
+                  value={contactForm.email}
+                  onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3d4f5c] focus:border-transparent"
+                  placeholder="atsa0009@gmail.com"
+                />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleContactChange}
+                  className="flex-1 bg-[#3d4f5c] text-white py-3 rounded-lg font-semibold hover:bg-[#2d3f4c] transition"
+                >
+                  Update Contact Info
+                </button>
+                <button
+                  onClick={() => setShowContactModal(false)}
                   className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
                 >
                   Cancel

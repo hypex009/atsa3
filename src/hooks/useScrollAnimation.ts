@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export function useScrollAnimation(threshold = 0.1) {
+export function useScrollAnimation(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -13,7 +13,7 @@ export function useScrollAnimation(threshold = 0.1) {
       },
       {
         threshold,
-        rootMargin: '50px',
+        rootMargin: '100px',
       }
     );
 
