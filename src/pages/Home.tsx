@@ -101,11 +101,22 @@ export function Home() {
       </header>
 
       {user && (
-        <div className="container mx-auto px-6 pt-24">
-          <div className="bg-white border-2 border-[#3d4f5c] text-[#3d4f5c] rounded-xl shadow-lg px-6 py-4 text-center">
-            <p className="text-lg font-semibold">
-              Welcome, {userName || user.email?.split('@')[0]}!
-            </p>
+        <div className="container mx-auto px-3 md:px-6 pt-16 md:pt-24 pb-4">
+          <div className="relative overflow-hidden rounded-lg md:rounded-2xl bg-gradient-to-br from-[#3d4f5c] via-[#5a7280] to-[#3d4f5c] p-px">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative bg-gradient-to-br from-[#3d4f5c]/95 to-[#5a7280]/95 backdrop-blur-sm rounded-lg md:rounded-2xl px-6 md:px-8 py-5 md:py-6 text-center border border-white/10">
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+              </div>
+              <div className="relative z-10">
+                <p className="text-white/70 text-xs md:text-sm font-medium tracking-widest uppercase mb-2">Welcome to ATSA</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                  Hello, <span className="bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 bg-clip-text text-transparent">{userName || user.email?.split('@')[0]}</span>!
+                </h3>
+                <p className="text-white/80 text-sm md:text-base font-medium">Ready to manage your manufacturing excellence</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
